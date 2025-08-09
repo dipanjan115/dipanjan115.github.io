@@ -9,8 +9,9 @@
     <title>Dipanjan Adhikary - Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;600&display=swap"></noscript>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation -->
@@ -538,60 +539,128 @@
             <div class="notion-card">
                 <div class="card-header">
                     <h3>Research Publications & Papers</h3>
+                    <div class="publication-counter">
+                        <span class="counter-item">
+                            <i data-lucide="file-text" class="counter-icon"></i>
+                            <span class="counter-text">5 Total</span>
+                        </span>
+                        <span class="counter-separator">•</span>
+                        <span class="counter-item">
+                            <i data-lucide="trophy" class="counter-icon"></i>
+                            <span class="counter-text">3 Conference</span>
+                        </span>
+                        <span class="counter-separator">•</span>
+                        <span class="counter-item">
+                            <i data-lucide="graduation-cap" class="counter-icon"></i>
+                            <span class="counter-text">1 Thesis</span>
+                        </span>
+                    </div>
                     <i data-lucide="chevron-down" class="toggle-icon"></i>
                 </div>
                 <div class="card-content">
                     <div class="publications-list">
-                        <div class="publication-card">
-                            <div class="publication-content">
-                                <h3>DRAGON: Data and Resource Allocation in ISAC Systems based on Game Theory and Learning</h3>
-                                <p class="conference">IEEE International Conference on Communications (ICC) 2025 (Accepted)</p>
-                                <div class="publication-tags">
-                                    <span class="publication-tag">IEEE</span>
-                                    <span class="publication-tag">ISAC</span>
-                                    <span class="publication-tag">Game Theory</span>
-                                    <span class="publication-tag">Machine Learning</span>
+                        <!-- Conference Publications -->
+                        <div class="publication-section" data-type="conference">
+                            <h4 class="publication-section-title">
+                                <i data-lucide="trophy" class="section-icon"></i>
+                                Conference Publications
+                            </h4>
+                            
+                            <div class="publication-card">
+                                <div class="publication-content">
+                                    <h3>Denial of Service Attacks in Over-the-Air Computation for Internet of Medical Things</h3>
+                                    <p class="conference">IEEE Globecom 2025 (Accepted)</p>
+                                    <div class="publication-tags">
+                                        <span class="publication-tag">IEEE</span>
+                                        <span class="publication-tag">IoMT</span>
+                                        <span class="publication-tag">Security</span>
+                                        <span class="publication-tag">Over-the-Air Computation</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="publication-card">
+                                <div class="publication-content">
+                                    <h3>DRAGON: Data and Resource Allocation in ISAC Systems based on Game Theory and Learning</h3>
+                                    <p class="conference">IEEE International Conference on Communications (ICC) 2025</p>
+                                    <div class="publication-tags">
+                                        <span class="publication-tag">IEEE</span>
+                                        <span class="publication-tag">ISAC</span>
+                                        <span class="publication-tag">Game Theory</span>
+                                        <span class="publication-tag">Machine Learning</span>
+                                    </div>
+                                    <a href="#" class="publication-link" target="_blank" rel="noopener noreferrer">View Publication</a>
+                                </div>
+                            </div>
+
+                            <div class="publication-card">
+                                <div class="publication-content">
+                                    <h3>Coopetition Based Inter-Operator Traffic Sharing for Energy Efficient Cellular Networks</h3>
+                                    <p class="conference">13th International Conference on Signal Processing and Communication Systems 2019 (IEEE ICSPCS 2019)</p>
+                                    <div class="publication-tags">
+                                        <span class="publication-tag">IEEE</span>
+                                        <span class="publication-tag">Energy Efficiency</span>
+                                        <span class="publication-tag">Cellular Networks</span>
+                                        <span class="publication-tag">Game Theory</span>
+                                    </div>
+                                    <a href="https://ieeexplore.ieee.org/document/9008429" class="publication-link" target="_blank" rel="noopener noreferrer">View Publication</a>
+                                </div>
+                            </div>
+
+                            <div class="publication-card">
+                                <div class="publication-content">
+                                    <h3>Text to Braille Scanner with Ultra Low-Cost Refreshable Braille Display</h3>
+                                    <p class="conference">2018 IEEE Global Humanitarian Technology Conference (IEEE GHTC 2018)</p>
+                                    <div class="publication-tags">
+                                        <span class="publication-tag">IEEE</span>
+                                        <span class="publication-tag">Accessibility</span>
+                                        <span class="publication-tag">Humanitarian Tech</span>
+                                    </div>
+                                    <a href="https://ieeexplore.ieee.org/document/8601552" class="publication-link" target="_blank" rel="noopener noreferrer">View Publication</a>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="publication-card">
-                            <div class="publication-content">
-                                <h3>Message Prioritization In Bluetooth Mesh Networks</h3>
-                                <p class="conference">Master's Thesis, NTNU Open, 2023</p>
-                                <div class="publication-tags">
-                                    <span class="publication-tag">Bluetooth Mesh</span>
-                                    <span class="publication-tag">QoS</span>
-                                    <span class="publication-tag">Networking</span>
+                        <!-- Journal Publications (commented out for now) -->
+                        <!-- 
+                        <div class="publication-section" data-type="journal">
+                            <h4 class="publication-section-title">
+                                <i data-lucide="book-open" class="section-icon"></i>
+                                Journal Publications
+                            </h4>
+                            
+                            <div class="publication-card">
+                                <div class="publication-content">
+                                    <h3>Sample Journal Paper Title</h3>
+                                    <p class="conference">IEEE Transactions on Example, 2024</p>
+                                    <div class="publication-tags">
+                                        <span class="publication-tag">IEEE</span>
+                                        <span class="publication-tag">Journal</span>
+                                    </div>
+                                    <a href="#" class="publication-link" target="_blank" rel="noopener noreferrer">View Publication</a>
                                 </div>
-                                <a href="https://ntnuopen.ntnu.no/ntnu-xmlui/handle/11250/3099252" class="publication-link" target="_blank" rel="noopener noreferrer">View Publication</a>
                             </div>
                         </div>
+                        -->
 
-                        <div class="publication-card">
-                            <div class="publication-content">
-                                <h3>Coopetition Based Inter-Operator Traffic Sharing for Energy Efficient Cellular Networks</h3>
-                                <p class="conference">13th International Conference on Signal Processing and Communication Systems 2019 (IEEE ICSPCS 2019)</p>
-                                <div class="publication-tags">
-                                    <span class="publication-tag">IEEE</span>
-                                    <span class="publication-tag">Energy Efficiency</span>
-                                    <span class="publication-tag">Cellular Networks</span>
-                                    <span class="publication-tag">Game Theory</span>
+                        <!-- Thesis Publications -->
+                        <div class="publication-section" data-type="thesis">
+                            <h4 class="publication-section-title">
+                                <i data-lucide="graduation-cap" class="section-icon"></i>
+                                Thesis
+                            </h4>
+                            
+                            <div class="publication-card">
+                                <div class="publication-content">
+                                    <h3>Message Prioritization In Bluetooth Mesh Networks</h3>
+                                    <p class="conference">Master's Thesis, NTNU Open, 2023</p>
+                                    <div class="publication-tags">
+                                        <span class="publication-tag">Bluetooth Mesh</span>
+                                        <span class="publication-tag">QoS</span>
+                                        <span class="publication-tag">Networking</span>
+                                    </div>
+                                    <a href="https://ntnuopen.ntnu.no/ntnu-xmlui/handle/11250/3099252" class="publication-link" target="_blank" rel="noopener noreferrer">View Publication</a>
                                 </div>
-                                <a href="https://ieeexplore.ieee.org/document/9008429" class="publication-link" target="_blank" rel="noopener noreferrer">View Publication</a>
-                            </div>
-                        </div>
-
-                        <div class="publication-card">
-                            <div class="publication-content">
-                                <h3>Text to Braille Scanner with Ultra Low-Cost Refreshable Braille Display</h3>
-                                <p class="conference">2018 IEEE Global Humanitarian Technology Conference (IEEE GHTC 2018)</p>
-                                <div class="publication-tags">
-                                    <span class="publication-tag">IEEE</span>
-                                    <span class="publication-tag">Accessibility</span>
-                                    <span class="publication-tag">Humanitarian Tech</span>
-                                </div>
-                                <a href="https://ieeexplore.ieee.org/document/8601552" class="publication-link" target="_blank" rel="noopener noreferrer">View Publication</a>
                             </div>
                         </div>
                     </div>
@@ -703,7 +772,7 @@
         </div>
     </footer>
 
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    <script src="script.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
+    <script src="script.js" defer></script>
 </body>
 </html> 

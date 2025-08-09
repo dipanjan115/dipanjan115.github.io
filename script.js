@@ -1,18 +1,26 @@
-// Initialize Lucide icons when DOM is loaded
+// Optimized initialization with reduced DOM queries and batched operations
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Lucide icons
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-    }
-    
-    // Initialize all interactive features
-    initializeTheme();
-    initializeNavigation();
-    initializeMobileMenu();
-    initializeCardToggles();
-    initializeScrollEffects();
-    initializeProjectModals();
-    initializeContactLinks();
+    // Batch all initialization to avoid multiple DOM queries
+    requestAnimationFrame(() => {
+        // Initialize Lucide icons once
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+        
+        // Initialize all interactive features
+        initializeTheme();
+        initializeNavigation();
+        initializeMobileMenu();
+        initializeCardToggles();
+        initializeProjectModals();
+        initializeContactLinks();
+        updatePublicationCounter();
+        
+        // Defer heavy operations
+        setTimeout(() => {
+            initializeScrollEffects();
+        }, 100);
+    });
 });
 
 // Theme Toggle Functionality
@@ -84,19 +92,27 @@ function initializeNavigation() {
         });
     });
     
-    // Throttled scroll handler for better performance
+    // Optimized scroll handler with debouncing and passive listening
     let ticking = false;
+    let lastScrollY = 0;
+    
     window.addEventListener('scroll', function() {
         if (!ticking) {
             requestAnimationFrame(function() {
-                updateNavbarBackground();
-                updateActiveNavOnScroll();
-                handleScrollTopButton();
+                const currentScrollY = window.pageYOffset;
+                
+                // Only update if scroll position changed significantly
+                if (Math.abs(currentScrollY - lastScrollY) > 5) {
+                    updateNavbarBackground();
+                    updateActiveNavOnScroll();
+                    handleScrollTopButton();
+                    lastScrollY = currentScrollY;
+                }
                 ticking = false;
             });
             ticking = true;
         }
-    });
+    }, { passive: true }); // Passive listener for better performance
 }
 
 function updateNavbarBackground() {
@@ -224,51 +240,72 @@ function toggleCard(header) {
     
     const isExpanded = header.classList.contains('expanded');
     
+    // Check if this is the publications section
+    const publicationsSection = header.closest('#publications');
+    const publicationCounter = publicationsSection ? publicationsSection.querySelector('.publication-counter') : null;
+    
     if (isExpanded) {
         // Close the card
         content.classList.remove('expanded');
         header.classList.remove('expanded');
         header.setAttribute('aria-expanded', 'false');
         content.setAttribute('aria-hidden', 'true');
+        
+        // Show publication counter if this is the publications section
+        if (publicationCounter) {
+            publicationCounter.classList.remove('hidden');
+        }
     } else {
         // Open the card
         content.classList.add('expanded');
         header.classList.add('expanded');
         header.setAttribute('aria-expanded', 'true');
         content.setAttribute('aria-hidden', 'false');
+        
+        // Hide publication counter if this is the publications section
+        if (publicationCounter) {
+            publicationCounter.classList.add('hidden');
+        }
     }
     
-    // Re-initialize icons after DOM changes
+    // Optimized icon initialization - only for new elements
     if (typeof lucide !== 'undefined') {
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             lucide.createIcons();
-        }, 100);
+        });
     }
 }
 
-// Scroll effects and animations
+// Optimized scroll effects with lazy loading
 function initializeScrollEffects() {
+    // Use more efficient intersection observer settings
     const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        threshold: 0.05, // Reduced threshold for faster detection
+        rootMargin: '50px' // Smaller margin
     };
     
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-                entry.target.classList.add('animated');
+                // Batch DOM updates
+                requestAnimationFrame(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.classList.add('animated');
+                });
+                
+                // Stop observing this element once animated
+                observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
     
-    // Observe elements for animation
-    const animateElements = document.querySelectorAll('.notion-card, .experience-card, .project-card, .publication-card, .highlight-item');
+    // Lazy initialize animations only for visible elements
+    const animateElements = document.querySelectorAll('.notion-card, .project-card, .publication-card');
     animateElements.forEach((element, index) => {
         element.style.opacity = '0';
-        element.style.transform = 'translateY(30px)';
-        element.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        element.style.transform = 'translateY(20px)'; // Reduced distance
+        element.style.transition = `opacity 0.4s ease ${Math.min(index * 0.05, 0.3)}s, transform 0.4s ease ${Math.min(index * 0.05, 0.3)}s`; // Faster animations
         observer.observe(element);
     });
 }
@@ -440,10 +477,14 @@ function scrollToTop() {
     });
 }
 
-// Add scroll to top button
-document.addEventListener('DOMContentLoaded', function() {
-    // Create scroll to top button
-    const scrollTopBtn = document.createElement('button');
+// Lazy load scroll to top button only when needed
+let scrollTopBtn = null;
+let scrollTopBtnCreated = false;
+
+function createScrollTopButton() {
+    if (scrollTopBtnCreated) return;
+    
+    scrollTopBtn = document.createElement('button');
     scrollTopBtn.innerHTML = '<i data-lucide="chevron-up"></i>';
     scrollTopBtn.className = 'scroll-top-btn';
     scrollTopBtn.style.cssText = `
@@ -461,43 +502,52 @@ document.addEventListener('DOMContentLoaded', function() {
         align-items: center;
         justify-content: center;
         box-shadow: 0 4px 12px var(--shadow-medium);
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         z-index: 1000;
+        will-change: transform, background;
     `;
     
     document.body.appendChild(scrollTopBtn);
     
     // Scroll to top functionality
-    scrollTopBtn.addEventListener('click', scrollToTop);
+    scrollTopBtn.addEventListener('click', scrollToTop, { passive: true });
     
-    // Hover effect
+    // Optimized hover effects with requestAnimationFrame
     scrollTopBtn.addEventListener('mouseenter', function() {
-        this.style.background = 'var(--accent-hover)';
-        this.style.transform = 'translateY(-2px) scale(1.1)';
+        requestAnimationFrame(() => {
+            this.style.background = 'var(--accent-hover)';
+            this.style.transform = 'translateY(-2px) scale(1.1)';
+        });
     });
     
     scrollTopBtn.addEventListener('mouseleave', function() {
-        this.style.background = 'var(--accent-primary)';
-        this.style.transform = 'translateY(0) scale(1)';
+        requestAnimationFrame(() => {
+            this.style.background = 'var(--accent-primary)';
+            this.style.transform = 'translateY(0) scale(1)';
+        });
     });
     
     // Re-initialize icons
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
-});
-
-// Initialize additional features when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-    // Add loading animation
-    document.body.style.opacity = '0';
-    setTimeout(() => {
-        document.body.style.transition = 'opacity 0.5s ease';
-        document.body.style.opacity = '1';
-    }, 100);
     
-    // Initialize theme-aware elements
-    updateThemeAwareElements();
+    scrollTopBtnCreated = true;
+}
+
+// Optimized page loading
+document.addEventListener('DOMContentLoaded', function() {
+    // Faster, smoother loading animation
+    document.body.style.opacity = '0';
+    requestAnimationFrame(() => {
+        document.body.style.transition = 'opacity 0.3s ease';
+        document.body.style.opacity = '1';
+    });
+    
+    // Defer non-critical operations
+    setTimeout(() => {
+        updateThemeAwareElements();
+    }, 50);
 });
 
 // Update elements that need theme awareness
@@ -538,15 +588,17 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// Handle scroll to top button visibility
+// Handle scroll to top button visibility with lazy loading
 function handleScrollTopButton() {
-    const scrollTopBtn = document.querySelector('.scroll-top-btn');
-    if (scrollTopBtn) {
-        if (window.pageYOffset > 300) {
-            scrollTopBtn.style.display = 'flex';
-        } else {
-            scrollTopBtn.style.display = 'none';
+    if (window.pageYOffset > 300) {
+        if (!scrollTopBtnCreated) {
+            createScrollTopButton();
         }
+        if (scrollTopBtn) {
+            scrollTopBtn.style.display = 'flex';
+        }
+    } else if (scrollTopBtn) {
+        scrollTopBtn.style.display = 'none';
     }
 }
 
@@ -628,4 +680,67 @@ function updateActiveMobileNavLink(targetId) {
             link.classList.add('active');
         }
     });
+}
+
+// Dynamic Publication Counter
+function updatePublicationCounter() {
+    const publicationsSection = document.querySelector('#publications');
+    if (!publicationsSection) return;
+    
+    // Count publications by type
+    const conferenceCount = publicationsSection.querySelectorAll('.publication-section[data-type="conference"] .publication-card').length;
+    const journalCount = publicationsSection.querySelectorAll('.publication-section[data-type="journal"] .publication-card').length;
+    const thesisCount = publicationsSection.querySelectorAll('.publication-section[data-type="thesis"] .publication-card').length;
+    const totalCount = conferenceCount + journalCount + thesisCount;
+    
+    // Update counter display
+    const counter = publicationsSection.querySelector('.publication-counter');
+    if (!counter) return;
+    
+    // Build counter HTML dynamically
+    let counterHTML = `
+        <span class="counter-item">
+            <i data-lucide="file-text" class="counter-icon"></i>
+            <span class="counter-text">${totalCount} Total</span>
+        </span>
+    `;
+    
+    if (conferenceCount > 0) {
+        counterHTML += `
+            <span class="counter-separator">•</span>
+            <span class="counter-item">
+                <i data-lucide="trophy" class="counter-icon"></i>
+                <span class="counter-text">${conferenceCount} Conference</span>
+            </span>
+        `;
+    }
+    
+    if (journalCount > 0) {
+        counterHTML += `
+            <span class="counter-separator">•</span>
+            <span class="counter-item">
+                <i data-lucide="book-open" class="counter-icon"></i>
+                <span class="counter-text">${journalCount} Journal</span>
+            </span>
+        `;
+    }
+    
+    if (thesisCount > 0) {
+        counterHTML += `
+            <span class="counter-separator">•</span>
+            <span class="counter-item">
+                <i data-lucide="graduation-cap" class="counter-icon"></i>
+                <span class="counter-text">${thesisCount} Thesis</span>
+            </span>
+        `;
+    }
+    
+    counter.innerHTML = counterHTML;
+    
+    // Re-initialize icons for the counter
+    if (typeof lucide !== 'undefined') {
+        setTimeout(() => {
+            lucide.createIcons();
+        }, 50);
+    }
 } 
